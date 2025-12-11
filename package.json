@@ -1,0 +1,24 @@
+{
+  "name": "3d-tour-polus",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "deploy": "gh-pages -d dist",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "@photo-sphere-viewer/core": "^5.0.0",
+    "@photo-sphere-viewer/equirectangular-tiles-adapter": "^5.0.0",
+    "@photo-sphere-viewer/markers-plugin": "^5.0.0",
+    "@photo-sphere-viewer/plan-plugin": "^5.0.0",
+    "@photo-sphere-viewer/virtual-tour-plugin": "^5.0.0"
+  }
+}
