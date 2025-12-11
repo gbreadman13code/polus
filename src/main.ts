@@ -91,15 +91,29 @@ const markersPlugin = viewer.getPlugin(MarkersPlugin) as MarkersPlugin;
 const infoPanel = document.getElementById('info-panel');
 const infoClose = document.getElementById('info-close');
 
+let closeInfoTimeout: any = null;
+
 if (infoClose && infoPanel) {
   infoClose.addEventListener('click', () => {
     infoPanel.classList.add('hidden');
+    // Clear image after transition
+    if (closeInfoTimeout) clearTimeout(closeInfoTimeout);
+    closeInfoTimeout = setTimeout(() => {
+        const image = infoPanel.querySelector('#info-image') as HTMLImageElement;
+        if (image) image.src = '';
+    }, 300);
   });
 }
 
 markersPlugin.addEventListener('select-marker', (e: any) => {
   if (e.marker.id.startsWith('info-')) {
     if (infoPanel) {
+      // Cancel any pending close clearing
+      if (closeInfoTimeout) {
+          clearTimeout(closeInfoTimeout);
+          closeInfoTimeout = null;
+      }
+      
       const image = infoPanel.querySelector('#info-image') as HTMLImageElement;
       
       // Update Image
@@ -233,6 +247,12 @@ virtualTour.addEventListener('node-changed', (e: any) => {
   // Close info panel if open
   if (infoPanel) {
     infoPanel.classList.add('hidden');
+    // Clear image after transition
+    if (closeInfoTimeout) clearTimeout(closeInfoTimeout);
+    closeInfoTimeout = setTimeout(() => {
+        const image = infoPanel.querySelector('#info-image') as HTMLImageElement;
+        if (image) image.src = '';
+    }, 300);
   }
   
   // Update controls for the new node
