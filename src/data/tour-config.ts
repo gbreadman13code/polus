@@ -378,7 +378,7 @@ export const locationGroups: LocationGroup[] = [
         name: 'Плавильное отделение',
         defaultYaw: '0.3497rad', defaultPitch: '-0.0144rad',
         gallery: ['assets/photos/zif/plavilniy1.png', 'assets/photos/zif/plavilniy2.png', 'assets/photos/zif/plavilniy3.png'],
-        video: '/assets/videos/2.mp4',
+        video: 'assets/videos/2.mp4',
         links: [ { nodeId: 'zif-1', position: { yaw: 1.4957, pitch: 0.0752 } } ],
         markers: [{
           id: 'info-1',
@@ -463,7 +463,7 @@ export const locationGroups: LocationGroup[] = [
         panorama: 'assets/rooms/service/angar-3.jpg',
         name: 'Сервисный ангар',
         defaultYaw: '6.1375rad', defaultPitch: '0.4295rad',
-        video: '/assets/videos/1.mp4',
+        video: 'assets/videos/1.mp4',
         links: [ { nodeId: 'kabina', position: { yaw: 5.7188, pitch: 0.4926 } },
           { nodeId: 'service-1', position: { yaw: 2.1327, pitch: 0.1971 } } ],
         markers: [{
