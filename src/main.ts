@@ -22,12 +22,15 @@ const container = document.querySelector('#viewer') as HTMLElement;
 const viewer = new Viewer({
   container: container,
   // loadingImg: '/loader.gif', // Removed because file is missing
-  touchmoveTwoFingers: true,
+  touchmoveTwoFingers: false,
   mousewheelCtrlKey: true,
   defaultYaw: '0deg',
   defaultZoomLvl: 0, // Most zoomed out (widest FOV)
   navbar: false,
   mousewheel: false,
+  lang: {
+    loading: 'Загрузка...',
+  },
   plugins: [
     [VirtualTourPlugin, {
       positionMode: 'manual',
@@ -58,7 +61,6 @@ const viewer = new Viewer({
       },
     }],
     [MarkersPlugin, {
-      markers: [], // Initial empty list
       defaultHoverScale: false,
     }],
   ],
@@ -324,27 +326,6 @@ viewer.addEventListener('click', (e: any) => {
 // Location Navigation Controls
 const locationNav = document.getElementById('location-nav');
 
-// Initialize Variant Selector
-import { VariantSelector } from './components/variant-selector';
-
-const variantSelector = new VariantSelector({
-  container: document.getElementById('viewer') as HTMLElement,
-  onSceneSelect: (scene: SceneConfig, allScenes: SceneConfig[]) => {
-    currentSceneConfigs = allScenes;
-    window.__currentSceneConfigs = currentSceneConfigs;
-    virtualTour.setNodes(
-      allScenes.map(s => ({
-        id: s.id,
-        panorama: s.panorama,
-        name: s.name,
-        links: s.links,
-        markers: s.markers,
-      })),
-      scene.id
-    );
-  }
-});
-
 let currentLocationId = locationGroups.length > 0 ? locationGroups[0].id : ''; // Default to first location
 
 // Render the navigation (flat list of all locations)
@@ -353,6 +334,25 @@ const renderLocationNav = () => {
   
   // Clear existing content
   locationNav.innerHTML = '';
+
+  // Create Header for Mobile
+  const navHeader = document.createElement('div');
+  navHeader.className = 'nav-header';
+  
+  const currentText = document.createElement('span');
+  currentText.className = 'current-text';
+  currentText.textContent = 'Выберите локацию'; // Placeholder
+  
+  const chevron = document.createElement('div');
+  chevron.className = 'chevron-icon';
+  chevron.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+  
+  navHeader.appendChild(currentText);
+  navHeader.appendChild(chevron);
+  
+  // Create List Container
+  const navList = document.createElement('div');
+  navList.className = 'nav-list';
   
   locationGroups.forEach(group => {
     const btn = document.createElement('button');
@@ -363,14 +363,16 @@ const renderLocationNav = () => {
       selectLocation(group.id);
     });
     
-    locationNav.appendChild(btn);
+    navList.appendChild(btn);
   });
-    
-  // Update variant selector for current location
-  const currentLocation = locationGroups.find(g => g.id === currentLocationId);
-  if (currentLocation) {
-    variantSelector.setLocationGroup(currentLocation);
-  }
+
+  locationNav.appendChild(navHeader);
+  locationNav.appendChild(navList);
+
+  // Toggle Dropdown logic
+  navHeader.addEventListener('click', () => {
+      locationNav.classList.toggle('expanded');
+  });
 };
 
 // Select a location
@@ -379,6 +381,25 @@ const selectLocation = (locationId: string) => {
   
   if (locationGroup) {
     currentLocationId = locationId;
+    
+    // Update Header Text
+    const currentText = locationNav?.querySelector('.current-text');
+    if (currentText) {
+        currentText.textContent = locationGroup.name;
+    }
+
+    // Collapse dropdown on mobile
+    locationNav?.classList.remove('expanded');
+
+    // Update active class on buttons
+    const buttons = locationNav?.querySelectorAll('.location-btn');
+    buttons?.forEach(btn => {
+        if (btn.textContent === locationGroup.name) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
     
     // Determine which scenes to load
     let scenesToLoad: SceneConfig[] = [];
@@ -430,8 +451,11 @@ const selectLocation = (locationId: string) => {
       );
     }
     
-    // Re-render navigation to update active state
-    renderLocationNav();
+    // Re-render is not needed if we just update classes, but we are updating content above 
+    // manually instead of calling renderLocationNav() completely to accept animation state if we wanted.
+    // However, existing code re-rendered. Let's stick to the manual update above for smoother UX 
+    // or just call render to be safe but that kills the dropdown state.
+    // I already updated active classes manually above.
   }
 };
 

@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   // Base path for the application. 
-  // Should be '/' for Vercel deployment if at the root.
-  base: '/3d-tour-polus/',
+  // Should be './' to work with both Vercel (root) and GitHub Pages (subdirectory).
+  base: './',
   build: {
     // Output directory for the build
     outDir: 'dist',

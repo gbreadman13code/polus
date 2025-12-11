@@ -36,6 +36,9 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0.7;
+
+  color: #FFB635;
+
 }
 
 /* Center Content */
@@ -78,6 +81,8 @@
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 5px;
+
+  color: #FFB635;
 }
 
 /* Progress Bar Line - Optional if we want a visual bar, 
@@ -88,7 +93,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .loader-title {
-    font-size: 48px;
+    font-size: 28px;
   }
   .loader-subtitle {
     font-size: 28px;
